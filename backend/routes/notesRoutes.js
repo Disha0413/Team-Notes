@@ -2,17 +2,25 @@ const express = require("express");
 const router = express.Router();
 const pool = require("../db");
 const {protect, authorize}= require("../middleware/authMiddleware.js");
+const noteSchema = require("../validation/notesValidation");
+
+console.log("NOTE SCHEMA:", noteSchema);
+console.log("TYPE:", typeof noteSchema);
 
 router.post("/", protect, async (req, res) => {
   try {
-    const { title, content } = req.body;
+    //VALIDATION
+    const { error } = noteSchema.validate(req.body);
 
-    if (!title || !content) {
-      return res.status(400).json({ message: "Title & content required" });
+    if (error) {
+      return res.status(400).json({ message: error.details[0].message });
     }
 
+    //SAFE TO USE DATA
+    const { title, content } = req.body;
     const authorId = req.user.id;
 
+    //DB INSERT
     const newNote = await pool.query(
       "INSERT INTO notes (title, content, author_id) VALUES ($1,$2,$3) RETURNING *",
       [title, content, authorId]
