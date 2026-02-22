@@ -4,10 +4,7 @@ const pool = require("../db");
 const {protect, authorize}= require("../middleware/authMiddleware.js");
 const noteSchema = require("../validation/notesValidation");
 
-console.log("NOTE SCHEMA:", noteSchema);
-console.log("TYPE:", typeof noteSchema);
-
-router.post("/", protect, async (req, res) => {
+router.post("/", protect, async (req, res, next) => {
   try {
     //VALIDATION
     const { error } = noteSchema.validate(req.body);
@@ -29,12 +26,11 @@ router.post("/", protect, async (req, res) => {
     res.status(201).json(newNote.rows[0]);
 
   } catch (err) {
-    console.error(err);
-    res.status(500).json({ message: "Server error" });
-  }
+  next(err);
+}
 });
 
-router.get("/", protect, async (req, res) => {
+router.get("/", protect, async (req, res, next) => {
   try {
     const { search = "", page = 1, limit = 10 } = req.query;
     const authorId = req.user.id;
@@ -72,13 +68,12 @@ router.get("/", protect, async (req, res) => {
       total: total
     });
 
-  } catch (error) {
-    console.error(error);
-    res.status(500).json({ message: "Server error" });
-  }
+  } catch (err) {
+  next(err);
+}
 });
 
-router.put("/:id", protect, async (req, res) => {
+router.put("/:id", protect, async (req, res, next) => {
   try {
     const { title, content } = req.body;
     const { id } = req.params;
@@ -96,12 +91,11 @@ router.put("/:id", protect, async (req, res) => {
     res.json(updatedNote.rows[0]);
 
   } catch (err) {
-    console.error(err);
-    res.status(500).json({ message: "Server error" });
-  }
+  next(err);
+}
 });
 
-router.delete("/:id", protect, async (req, res) => {
+router.delete("/:id", protect, async (req, res, next) => {
   try {
     const { id } = req.params;
     const authorId = req.user.id;
@@ -118,9 +112,8 @@ router.delete("/:id", protect, async (req, res) => {
     res.json({ message: "Note deleted successfully" });
 
   } catch (err) {
-    console.error(err);
-    res.status(500).json({ message: "Server error" });
-  }
+  next(err);
+}
 });
 
 module.exports = router;

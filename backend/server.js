@@ -1,16 +1,14 @@
 require("dotenv").config();
 const express = require("express");
 const app = express();
+const authRoutes = require("./routes/authRoutes");
+const notesRoutes = require("./routes/notesRoutes");
+const errorHandler = require("./middleware/errorMiddleware");
 
 app.use(express.json());
 
-const notesRoutes = require("./routes/notesRoutes");
-const authRoutes = require("./routes/authRoutes");
+app.use("/api/auth", authRoutes);  
+app.use("/api/notes", notesRoutes);
 
-app.use("/api/auth", authRoutes);
-app.use("/api/notes", notesRoutes); // notes CRUD
-
-const PORT = 5000;
-app.listen(PORT, () => {
-  console.log(`Server running on port ${PORT}`);
-});
+app.use(errorHandler);
+app.listen(5000, () => console.log("Server running on port 5000"));
