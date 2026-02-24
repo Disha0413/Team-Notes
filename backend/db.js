@@ -1,6 +1,5 @@
 const { Pool } = require("pg");
 
-// ⭐ Create Postgres connection pool
 const pool = new Pool({
   user: "postgres",
   host: "localhost",

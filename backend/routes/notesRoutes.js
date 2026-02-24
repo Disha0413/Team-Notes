@@ -6,18 +6,16 @@ const noteSchema = require("../validation/notesValidation");
 
 router.post("/", protect, async (req, res, next) => {
   try {
-    //VALIDATION
+  
     const { error } = noteSchema.validate(req.body);
 
     if (error) {
       return res.status(400).json({ message: error.details[0].message });
     }
 
-    //SAFE TO USE DATA
     const { title, content } = req.body;
     const authorId = req.user.id;
 
-    //DB INSERT
     const newNote = await pool.query(
       "INSERT INTO notes (title, content, author_id) VALUES ($1,$2,$3) RETURNING *",
       [title, content, authorId]
@@ -39,7 +37,6 @@ router.get("/", protect, async (req, res, next) => {
     const limitNum = parseInt(limit);
     const offset = (pageNum - 1) * limitNum;
 
-    //count query FIRST
     const countResult = await pool.query(
       `
       SELECT COUNT(*) FROM notes
@@ -51,7 +48,6 @@ router.get("/", protect, async (req, res, next) => {
 
     const total = parseInt(countResult.rows[0].count);
 
-    //data query
     const result = await pool.query(
       `
       SELECT * FROM notes

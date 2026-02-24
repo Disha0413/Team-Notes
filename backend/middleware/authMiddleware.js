@@ -6,7 +6,6 @@ const protect = async (req, res, next) => {
   if (req.headers.authorization && req.headers.authorization.startsWith("Bearer")) {
     try {
       token = req.headers.authorization.split(" ")[1];
-      //Verify token
       const decoded = jwt.verify(token, process.env.JWT_SECRET);
       // attach user
       req.user = decoded;
@@ -19,7 +18,6 @@ const protect = async (req, res, next) => {
     }
   }
 
-  //If token missing
   const error = new Error("Not authorized, no token");
   error.statusCode = 401;
   return next(error);
