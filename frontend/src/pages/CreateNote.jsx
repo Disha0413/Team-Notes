@@ -1,12 +1,22 @@
 import { useState } from "react";
+import API from "../api/axios";
+import { useNavigate } from "react-router-dom";
 
 export default function CreateNote() {
   const [title, setTitle] = useState("");
   const [content, setContent] = useState("");
+  const navigate = useNavigate();
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    console.log(title, content);
+
+    try {
+      await API.post("/notes", { title, content });
+
+      navigate("/dashboard");
+    } catch (err) {
+      console.log(err);
+    }
   };
 
   return (

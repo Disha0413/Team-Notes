@@ -69,6 +69,27 @@ router.get("/", protect, async (req, res, next) => {
 }
 });
 
+//get single note
+router.get("/:id", protect, async (req, res, next) => {
+  try {
+    const { id } = req.params;
+    const authorId = req.user.id;
+
+    const result = await pool.query(
+      "SELECT * FROM notes WHERE id = $1 AND author_id = $2",
+      [id, authorId]
+    );
+
+    if (result.rows.length === 0) {
+      return res.status(404).json({ message: "Note not found" });
+    }
+
+    res.json(result.rows[0]);
+  } catch (err) {
+    next(err);
+  }
+});
+
 router.put("/:id", protect, async (req, res, next) => {
   try {
     const { title, content } = req.body;
