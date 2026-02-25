@@ -1,6 +1,6 @@
 import { Link, useNavigate } from "react-router-dom";
 import { useState } from "react";
-import API from "../api/axios"; // import the Axios instance
+import API from "../api/axios";
 
 export default function Login() {
   const [email, setEmail] = useState("");
@@ -12,29 +12,24 @@ export default function Login() {
 
     try {
       const res = await API.post("/auth/login", { email, password });
+      console.log("Login response:", res.data);
 
-      // 1️⃣ Extract token from response
-      const token = res.data.token;
-      if (!token) {
-        alert("Login failed: no token received");
-        return;
-      }
+      const { token, role } = res.data;
+      if (!token) return alert("Login failed: no token received");
 
-      // 2️⃣ Store token in localStorage
-      localStorage.setItem("authToken", token);
+      localStorage.setItem("token", token);
+      localStorage.setItem("role", role);
 
-      // 3️⃣ Navigate to dashboard
       navigate("/dashboard");
     } catch (err) {
       console.log(err.response?.data || err);
-      alert("Login failed ❌");
+      alert(err.response?.data?.message || "Login Failed");
     }
   };
 
   return (
-    <div className="container">
+    <div style={{ padding: 40 }}>
       <h1>Login</h1>
-
       <form onSubmit={handleSubmit}>
         <input
           type="email"
@@ -43,7 +38,6 @@ export default function Login() {
           onChange={(e) => setEmail(e.target.value)}
           required
         />
-
         <input
           type="password"
           placeholder="Password"
@@ -51,9 +45,7 @@ export default function Login() {
           onChange={(e) => setPassword(e.target.value)}
           required
         />
-
         <button type="submit">Login</button>
-
         <p>
           Don't have an account? <Link to="/register">Register</Link>
         </p>
@@ -61,3 +53,67 @@ export default function Login() {
     </div>
   );
 }
+
+// import { Link, useNavigate } from "react-router-dom";
+// import { useState } from "react";
+// import API from "../api/axios"; // import the Axios instance
+
+// export default function Login() {
+//   const [email, setEmail] = useState("");
+//   const [password, setPassword] = useState("");
+//   const navigate = useNavigate();
+
+//   const handleSubmit = async (e) => {
+//     e.preventDefault();
+
+//     try {
+//       const res = await API.post("/auth/login", { email, password });
+
+//       // Extract token from response
+//       const token = res.data.token;
+//       if (!token) {
+//         alert("Login failed: no token received");
+//         return;
+//       }
+
+//       // Store token in localStorage
+//       localStorage.setItem("authToken", token);
+
+//       //Navigate to dashboard
+//       navigate("/dashboard");
+//     } catch (err) {
+//       console.log(err.response?.data || err);
+//       alert("Login Failed");
+//     }
+//   };
+
+//   return (
+//     <div className="container">
+//       <h1>Login</h1>
+
+//       <form onSubmit={handleSubmit}>
+//         <input
+//           type="email"
+//           placeholder="Email"
+//           value={email}
+//           onChange={(e) => setEmail(e.target.value)}
+//           required
+//         />
+
+//         <input
+//           type="password"
+//           placeholder="Password"
+//           value={password}
+//           onChange={(e) => setPassword(e.target.value)}
+//           required
+//         />
+
+//         <button type="submit">Login</button>
+
+//         <p>
+//           Don't have an account? <Link to="/register">Register</Link>
+//         </p>
+//       </form>
+//     </div>
+//   );
+// }
