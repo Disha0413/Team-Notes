@@ -25,7 +25,7 @@ router.post("/register", async (req, res, next) => {
     const passwordHash = await bcrypt.hash(password, saltRounds);
 
     await pool.query(
-      "INSERT INTO users (email, password_hash, role) VALUES ($1, $2, $3)",
+      "INSERT INTO users (email, password, role) VALUES ($1, $2, $3)",
       [email, passwordHash, "member"]
     );
 
@@ -49,7 +49,7 @@ router.post("/login", async (req, res, next) => {
       return res.status(404).json({ message: "User not found" });
     }
 
-    const isMatch = await bcrypt.compare(password, user.rows[0].password_hash);
+    const isMatch = await bcrypt.compare(password, user.rows[0].password);
     if (!isMatch) {
       return res.status(400).json({ message: "Invalid credentials" });
     }

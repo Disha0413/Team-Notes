@@ -14,3 +14,7 @@ app.use("/api/notes", notesRoutes);
 
 app.use(errorHandler);
 app.listen(5000, () => console.log("Server running on port 5000"));
+
+app.get("/", (req, res) => {
+  res.send("Backend running");
+});
