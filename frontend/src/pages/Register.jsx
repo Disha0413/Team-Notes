@@ -5,7 +5,7 @@ import API from "../api/axios";
 export default function Register() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  const [role, setRole] = useState("member"); // default role
+  const [role, setRole] = useState("member");
   const navigate = useNavigate();
 
   const handleSubmit = async (e) => {
@@ -21,36 +21,40 @@ export default function Register() {
   };
 
   return (
-    <div style={{ padding: 40 }}>
+    <div className="container">
       <h1>Register</h1>
 
       <form onSubmit={handleSubmit}>
-        <input
-          type="email"
-          placeholder="Email"
-          value={email}
-          onChange={(e) => setEmail(e.target.value)}
-          required
-        />
-        <br /><br />
+        <div className="form-group">
+          <input
+            type="email"
+            placeholder="Email"
+            value={email}
+            onChange={(e) => setEmail(e.target.value)}
+            required
+          />
+        </div>
 
-        <input
-          type="password"
-          placeholder="Password"
-          value={password}
-          onChange={(e) => setPassword(e.target.value)}
-          required
-        />
-        <br /><br />
+        <div className="form-group">
+          <input
+            type="password"
+            placeholder="Password"
+            value={password}
+            onChange={(e) => setPassword(e.target.value)}
+            required
+          />
+        </div>
 
-        <select value={role} onChange={(e) => setRole(e.target.value)}>
-          <option value="member">Member</option>
-          <option value="admin">Admin</option>
-        </select>
-        <br /><br />
+        <div className="form-group">
+          <select value={role} onChange={(e) => setRole(e.target.value)}>
+            <option value="member">Member</option>
+            <option value="admin">Admin</option>
+          </select>
+        </div>
 
         <button type="submit">Register</button>
-        <p>
+
+        <p className="center">
           Already have an account? <Link to="/login">Login</Link>
         </p>
       </form>

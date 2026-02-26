@@ -13,10 +13,21 @@ body {
 
 input, textarea {
   width: 100%;
-  padding: 10px;
+  padding: 10px 12px;
   margin-top: 10px;
   border-radius: 6px;
   border: none;
+  font-size: 14px;
+  box-sizing: border-box;
+}
+
+input:focus, textarea:focus {
+  outline: none;
+  box-shadow: 0 0 0 2px #3b82f6;
+}
+
+::placeholder {
+  color: #94a3b8;
 }
 
 button {
@@ -38,4 +49,24 @@ button:hover {
   padding: 15px;
   margin-top: 15px;
   border-radius: 8px;
+}
+
+h1 {
+  text-align: center;
+  margin-bottom: 25px;
+}
+
+.form-group {
+  margin-bottom: 15px;
+}
+
+.actions {
+  display: flex;
+  gap: 10px;
+  margin-top: 10px;
+}
+
+.center {
+  text-align: center;
+  margin-top: 15px;
 }

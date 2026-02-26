@@ -1,6 +1,6 @@
 import { useState } from "react";
 import API from "../api/axios";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, Link } from "react-router-dom";
 
 export default function CreateNote() {
   const [title, setTitle] = useState("");
@@ -12,35 +12,38 @@ export default function CreateNote() {
 
     try {
       await API.post("/notes", { title, content });
-
       navigate("/dashboard");
     } catch (err) {
-      console.log(err);
+      console.log(err.response?.data || err);
+      alert("Failed to create note");
     }
   };
 
   return (
-    <div style={{ padding: 40 }}>
+    <div className="container">
       <h1>Create Note</h1>
 
       <form onSubmit={handleSubmit}>
         <input
-          placeholder="Title"
+          placeholder="Note title..."
           value={title}
           onChange={(e) => setTitle(e.target.value)}
+          required
         />
-
-        <br /><br />
 
         <textarea
-          placeholder="Content"
+          placeholder="Write your note..."
           value={content}
           onChange={(e) => setContent(e.target.value)}
+          rows={6}
+          required
         />
 
-        <br /><br />
+        <button type="submit">Create Note</button>
 
-        <button>Create</button>
+        <p>
+          <Link to="/dashboard">← Back to Dashboard</Link>
+        </p>
       </form>
     </div>
   );
